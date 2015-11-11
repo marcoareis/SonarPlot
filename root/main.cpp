@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 
 			cv::Point2f point(imgx - center.x, imgy - center.y);
 
-			if (point.y == 0) {
+			if (!point.y) {
 				transfer.push_back(-1);
 			} else {
 				double theta = atan(point.x / point.y);
@@ -41,7 +41,11 @@ int main(int argc, char **argv) {
 					int id_beam;
 
 					for (int id_beam = 0; id_beam < beams - 1; ++id_beam) {
-						id_beam * beam_size
+
+						if (theta >= rad_beg + (id_beam * beam_size) && theta < rad_beg + (id_beam * beam_size)){
+							std::cout << "entao eh natal" << std::endl;
+						}
+
 
 
 					}
