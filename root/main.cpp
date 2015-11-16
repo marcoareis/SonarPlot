@@ -50,20 +50,19 @@ int main(int argc, char **argv) {
 
 					//  Sweeping the Grid ---------->> Entire Grid Polar Sweep
 
-					//					for (int id_bin = 0; id_bin < bins; ++id_bin) {
+					for (uint id_bin = 0; id_bin < bins; ++id_bin) {
+						for (uint id_Beam = 0; id_Beam <= beams; ++id_Beam) {
 
-					for (uint id_Beam = 0; id_Beam <= beams; ++id_Beam) {
+							if ((radius >= id_bin && radius < id_bin + 1) && (theta >= rad_beg + (id_Beam * beam_size) && theta < rad_beg + ((id_Beam + 1) * beam_size))){
 
-						if (theta >= rad_beg + (id_Beam * beam_size) && theta < rad_beg + ((id_Beam + 1) * beam_size)) {
+								transfer.push_back(id_Beam * id_bin);
 
-							transfer.push_back(id_Beam);
+							}
 
-							//																		std::cout << "id_Beam  " << id_Beam << std::endl << "radius   ------>" << radius << std::endl;
 
 						}
-
 					}
-					//					}
+
 				}
 			}
 
@@ -71,26 +70,26 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	//	std::cout << "Image: " << center.y * image.cols << std::endl;
-	//	std::cout << "Transfer: " << transfer.size() << std::endl;
+		std::cout << "Image: " << center.y * image.cols << std::endl;
+		std::cout << "Transfer: " << transfer.size() << std::endl;
 
-	// plot sonar image
+//	 plot sonar image
 	for (int x = 0; x < image.cols; ++x) {
 		for (int y = 0; y < center.y; ++y) {
 
 			if (!(transfer[x * center.y + y] == -1)){
 
-				image[y][x][0] = 255;
-				image[y][x][1] = 0;
-				image[y][x][2] = 255;
+				if (transfer[x * center.y + y]){
+
+					image[y][x][0] = 255;
+					image[y][x][1] = 0;
+					image[y][x][2] = 255;
+
+
+
+				}
 			}
 		}
-	}
-
-	for (int x = 0; x < transfer.size(); ++x) {
-
-		//		std::cout << "This is the transfer vector" << transfer.at(x) << std::endl;
-
 	}
 
 	cv::imshow("Sonar View", image);
