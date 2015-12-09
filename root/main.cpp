@@ -2,10 +2,17 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+using namespace cv;
+
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 int main(int argc, char **argv) {
 
-	cv::Mat3b image = cv::Mat3b::zeros(600, 1000);
+const clock_t begin_time = clock();
+
+	cv::Mat3b image = cv::Mat3b::zeros(1024, 1024);
 	cv::Point center(image.cols * 0.5, image.rows * 0.9);
 
 	// fixed variables (parameters)
@@ -50,18 +57,30 @@ int main(int argc, char **argv) {
 
 					//  Sweeping the Grid ---------->> Entire Grid Polar Sweep
 
-					for (uint id_bin = 0; id_bin < bins; ++id_bin) {
-						for (uint id_Beam = 0; id_Beam <= beams; ++id_Beam) {
+//					for (uint id_Beam = 0; id_Beam <= beams; ++id_Beam) {
+//
+//						if ((theta >= rad_beg + (id_Beam * beam_size) && theta < rad_beg + ((id_Beam + 1) * beam_size))){
+//
+//							int new_beam = beams - 1 - id_Beam;
+//
+////							std::cout << "This is id_Beam --> " << id_Beam << std::endl;
+//
+//							transfer.push_back(id_Beam * bins + (int)radius);
+//
+//						}
+//					}
 
-							if ((radius >= id_bin && radius < id_bin + 1) && (theta >= rad_beg + (id_Beam * beam_size) && theta < rad_beg + ((id_Beam + 1) * beam_size))){
 
-								transfer.push_back(id_Beam * id_bin);
-
-							}
+					uint id_Beam;
+					id_Beam = (theta - rad_beg)/beam_size;
 
 
-						}
-					}
+					std::cout << "This is id_Beam------> " << id_Beam << std::endl;
+					std::cout << "This is the value stored in transfer------> " << id_Beam * bins + (int)radius << std::endl << std::endl;
+
+					transfer.push_back(id_Beam * bins + (int)radius);
+
+
 
 				}
 			}
@@ -70,30 +89,60 @@ int main(int argc, char **argv) {
 		}
 	}
 
-		std::cout << "Image: " << center.y * image.cols << std::endl;
-		std::cout << "Transfer: " << transfer.size() << std::endl;
+//	std::cout << "Image: " << center.y * image.cols << std::endl;
+//	std::cout << "Transfer: " << transfer.size() << std::endl;
 
-//	 plot sonar image
+	//	 plot sonar image
 	for (int x = 0; x < image.cols; ++x) {
 		for (int y = 0; y < center.y; ++y) {
 
-			if (!(transfer[x * center.y + y] == -1)){
+						if(transfer[x*center.y + y] > 32000) {
 
-				if (transfer[x * center.y + y]){
-
-					image[y][x][0] = 255;
-					image[y][x][1] = 0;
-					image[y][x][2] = 255;
+								image[y][x][0] = 255;
+								image[y][x][1] = 0;
+								image[y][x][2] = 255;
 
 
 
-				}
-			}
+						}
 		}
 	}
 
-	cv::imshow("Sonar View", image);
-	cv::waitKey();
+
+
+
+//	cv::namedWindow("Full Screen Trial", CV_WINDOW_KEEPRATIO );
+//	cv::imshow("Full Screen Trial", image);
+//	cv::waitKey();
+
+	std::cout << float( clock () - begin_time ) /  CLOCKS_PER_SEC << std::endl;
+
 	return 0;
 }
 
+
+
+
+
+
+//// @#$%#$#$%@$#@%$#@%#$@#$%@#%$#@$%$@#%$@#%$@#%$@#%$@#%$@@#$%#$#$%@$#@%$#@%#$@#$%@#%$#@$%$@#%$@#%$@#%$@#%$@#%$@@#$%#$#$%@$#@%$#@%#$@#$%@#%$#@$%$@#%$@#%$@#%$@#%$@#%$@@#$%#$#$%@$#@%$#@%#$@#$%@#%$#@$%$@#%$@#%$@#%$@#%$@#%$@
+
+//
+///// Global variables
+//Mat src, dst, tmp;
+//char* window_name = "Pyramids Demo";
+//
+//
+///**
+// * @function main
+// */
+//int main( int argc, char** argv )
+//{
+//  /// General instructions
+//  return 0;
+//}
+//
+//
+//
+//
+//
